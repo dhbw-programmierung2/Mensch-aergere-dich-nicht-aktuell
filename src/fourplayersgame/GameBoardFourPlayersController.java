@@ -30,7 +30,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 
 /**
- * Diese Klasse enthält das Spielfeld für 4 Spieler
+ * Diese Klasse enthÃ¤lt das Spielfeld fÃ¼r 4 Spieler
  * 
  * @author Lukas, Kim, Isabelle, Jonas
  * @version 1.0
@@ -124,10 +124,10 @@ public class GameBoardFourPlayersController {
 	/**
 	 * Methode die das Spielfeld initialisiert
 	 * 
-	 * @param playerName Enthält die Namen der Spieler
-	 * @param color Enthält die Farben der jeweiligen Spieler
-	 * @param rival Enthält ob es sich um einen Computer oder Mensch handelt
-	 * @param numberOfPlayers Enthält die Anzahl der Spieler
+	 * @param playerName EnthÃ¤lt die Namen der Spieler
+	 * @param color EnthÃ¤lt die Farben der jeweiligen Spieler
+	 * @param rival EnthÃ¤lt ob es sich um einen Computer oder Mensch handelt
+	 * @param numberOfPlayers EnthÃ¤lt die Anzahl der Spieler
 	 */
 	public void initialize(ArrayList<String> playerName, ArrayList<String> color, ArrayList<String> rival, int numberOfPlayers) {
 		
@@ -151,10 +151,10 @@ public class GameBoardFourPlayersController {
     //   imgDice.setImage(new Image ("/Dice1.png"));
 		
 		/*
-		 * check ob Farbe Grün ausgewählt wurde.
-		 * Definiert Basis für grün
+		 * check ob Farbe GrÃ¼n ausgewÃ¤hlt wurde.
+		 * Definiert Basis fÃ¼r grÃ¼n
 		 */
-		if(color.contains("Grün")) {
+		if(color.contains("GrÃ¼n")) {
 			
 			crcBeginGreen1.setEffect(new DropShadow(+25d, 0d, +2d, Color.GREEN));
 		     
@@ -168,8 +168,8 @@ public class GameBoardFourPlayersController {
 		}
 		
 		/*
-		 * check ob Farbe Gelb ausgewählt wurde.
-		 * Definiert Basis für Gelb
+		 * check ob Farbe Gelb ausgewÃ¤hlt wurde.
+		 * Definiert Basis fÃ¼r Gelb
 		 */
 		if(color.contains("Gelb")) {
 			
@@ -185,8 +185,8 @@ public class GameBoardFourPlayersController {
 		}
 		
 		/*
-		 * check ob Farbe Schwarz ausgewählt wurde.
-		 * Definiert Basis für Schwarz
+		 * check ob Farbe Schwarz ausgewÃ¤hlt wurde.
+		 * Definiert Basis fÃ¼r Schwarz
 		 */
 		if(color.contains("Schwarz")) {
 			
@@ -202,8 +202,8 @@ public class GameBoardFourPlayersController {
 		}
 		
 		/*
-		 * Check ob Farbe Rot ausgewählt wurde.
-		 * Definiert Basis für Rot
+		 * Check ob Farbe Rot ausgewÃ¤hlt wurde.
+		 * Definiert Basis fÃ¼r Rot
 		 */
 		if(color.contains("Rot")) {
 			
@@ -256,7 +256,7 @@ public class GameBoardFourPlayersController {
 	}
 	
 	/*
-	 * Setzt die grünen Spielfiguren in die grüne Basis
+	 * Setzt die grÃ¼nen Spielfiguren in die grÃ¼ne Basis
 	 */
 	public void populateGreen() {
 		Image im1 = new Image("/pictures/Green.jpg", false);
@@ -267,7 +267,7 @@ public class GameBoardFourPlayersController {
 	}
 	
 	/*
-	 *  Event Listener für 
+	 *  Event Listener fÃ¼r 
 	 */
 	@FXML
 	public void circleOnActionM(MouseEvent event) {
@@ -283,23 +283,56 @@ public class GameBoardFourPlayersController {
 	}
 	
 	/*
-	 *  Event Listener für den Button Würfeln
+	 *  Event Listener fÃ¼r den Button WÃ¼rfeln
 	 *  Dieser ruft die Mehtode rollTheDice auf
 	 */
 	@FXML
 	public void buttonRollTheDiceOnAction(ActionEvent event) {
 		
 		RollTheDice rtd = new RollTheDice();
-		rtd.rollTheDice();
+		int value = rtd.rollTheDice();
 		//lblPlayer.setText(String.valueOf(value));
 
 		/*
-		 * Ändern des Würfel bildes zu der gewürfelten Zahl
+		 * Bilder der sechs WÃ¼rfel
 		 */
+		Image dice1 = new Image("/pictures/Dice1.png", false);
+		Image dice2 = new Image("/pictures/Dice2.png", false);
+		Image dice3 = new Image("/pictures/Dice3.png", false);
+		Image dice4 = new Image("/pictures/Dice4.png", false);
+		Image dice5 = new Image("/pictures/Dice5.png", false);
+		Image dice6 = new Image("/pictures/Dice6.png", false);
+		
+		
+		/*
+		 * Ã„ndern des WÃ¼rfel bildes zu der gewÃ¼rfelten Zahl
+		 */
+		switch (value) {
+		case 1:
+			imgDice.setImage(dice1);
+			break;
+		case 2:
+			imgDice.setImage(dice2);
+			break;
+		case 3:
+			imgDice.setImage(dice3);
+			break;
+		case 4:
+			imgDice.setImage(dice4);
+			break;
+		case 5:
+			imgDice.setImage(dice5);
+			break;
+		case 6:
+			imgDice.setImage(dice6);
+			break;
+		default: imgDice.setImage(dice1);
+			break;
+		}
 	}
 	
 	/*
-	 *  Event Listener für den Beenden Button.
+	 *  Event Listener fÃ¼r den Beenden Button.
 	 *  Dieser Beendet das Programm
 	 */
 	@FXML
