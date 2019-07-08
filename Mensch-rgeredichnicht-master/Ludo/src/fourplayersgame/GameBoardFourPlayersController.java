@@ -329,6 +329,21 @@ public class GameBoardFourPlayersController {
 		default: imgDice.setImage(dice1);
 			break;
 		}
+		/*
+		 * Man darf nur einmal Würfeln und muss danach ziehen
+		 */
+		if (event.getSource()==btnRollTheDice) {
+			
+				btnRollTheDice.setDisable(true);
+				if (/*spieler hat gezogen*/ 
+						//circleOnActionM(event);
+						true) {
+					
+					btnRollTheDice.setDisable(false);
+				}
+			
+				
+			}
 	}
 	
 	/*
