@@ -1,24 +1,24 @@
 package launcher;
 
-import javafx.scene.Scene;
-
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.stage.Stage;
+import javafx.stage.Window;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.Parent;
-import sixplayersgame.GameBoardSixPlayersController;
-
+import javafx.scene.Scene;
 import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
-
+import sixplayersgame.GameBoardSixPlayersController;
 import fourplayersgame.GameBoardFourPlayersController;
-import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.control.ComboBox;
+
 
 
 /**
@@ -34,10 +34,15 @@ public class LauncherController {
 	/*
 	 * FXML Komponenten
 	 */
+	
 	@FXML
 	public GridPane gridPane;
-	public ComboBox<String> cbNumberOfPlayers;
-	
+	public RadioButton rbPlayer2;
+	public RadioButton rbPlayer3;
+	public RadioButton rbPlayer4;
+	public RadioButton rbPlayer5;
+	public RadioButton rbPlayer6;
+		
 	public TextField txtName1;
 	public TextField txtName2;
 	public TextField txtName3;
@@ -64,35 +69,27 @@ public class LauncherController {
 	public Button btnCheckSelection;
 	
 	/*
-	 *  Variable enthält die Anzahl der Spieler
+	 * Variable enthält die Anzahl der Spieler
 	 */
 	private int numberOfPlayers;
 	
 	/*
-	 *  ArrayLists die die Namen, Farbe und Eigenschaft der Spieler enthalten
+	 * ArrayLists die die Farbe und Eigenschaften der Spieler enthält, diese sind zum leichteren Befüllen der ComboBoxen.
 	 */
-	public ArrayList <TextField> txtName = new ArrayList<TextField>();
 	public ArrayList <ComboBox> cbColor = new ArrayList<ComboBox>();
 	public ArrayList <ComboBox> cbRival = new ArrayList<ComboBox>();
 	
 	/*
-	 *  ArrayLists zur Übergabe der Spiellogik
+	 * ArrayLists zur Übergabe der vom Spieler ausgewählten Eigenschaften an die Spiellogik 
 	 */
 	private ArrayList <String> playerName = new ArrayList<String>();
 	private ArrayList <String> color = new ArrayList<String>();
 	private ArrayList <String> rival = new ArrayList<String>();
 	
 	/*
-	 *  Hinzufügen der einzelnen Textfelder und Comboboxen den jeweiligen ArrayList 
+	 * Methode zum Hinzufügen der einzelnen ComboBoxen zu den ArrayLists sowie das Befüllen der ComboBoxen.
 	 */
 	public void initialize() {
-		txtName.add(txtName1);
-		txtName.add(txtName2);
-		txtName.add(txtName3);
-		txtName.add(txtName4);
-		txtName.add(txtName5);
-		txtName.add(txtName6);
-		
 		cbColor.add(cbColor1);
 		cbColor.add(cbColor2);
 		cbColor.add(cbColor3);
@@ -107,15 +104,8 @@ public class LauncherController {
 		cbRival.add(cbRival5);
 		cbRival.add(cbRival6);
 		
-		cbNumberOfPlayers.getItems().add("2");
-		cbNumberOfPlayers.getItems().add("3");
-		cbNumberOfPlayers.getItems().add("4");
-		cbNumberOfPlayers.getItems().add("5");
-		cbNumberOfPlayers.getItems().add("6");
-		cbNumberOfPlayers.setValue("2");
-		
 		/*
-		 *  wird die Combobox color mit 4 Farben gefüllt und gelb als Vorauswahl getroffen damit es nie leer sein kann
+		 * Die ComboBoxen Farbe wird zunächst mit den 4 Farben des 4er Spielbrettes gefüllt und die Farbe Gelb als Vorauswahl getroffen
 		 */
 		int i = 0,j = 0;
 		while (i < cbColor.size()) {
@@ -126,9 +116,8 @@ public class LauncherController {
 			cbColor.get(i).setValue("Gelb");
 			i++;
 		}
-		
 		/*
-		 *  dann wird die Combobox rival mit den 2 Möglichkeiten an Gegnern gefüllt und Mensch als Vorauswahl getroffen damit es nie leer sein kann
+		 * Die ComboBoxen für die Auswahl der Eigenschaften der Gegner wird befüllt und die Eigenschaft Mensch als Vorauswahl getroffen
 		 */
 		while (j < cbRival.size()) {
 			cbRival.get(j).getItems().add("Mensch");
@@ -141,22 +130,108 @@ public class LauncherController {
 	
 	@FXML
 	/*
-	 *  Event Listener für die Editierbarkeit der Checkboxen
+	 * Event Listener für den RadioButton, wenn für die Anzahl der Spieler 2 ausgewählt wird.
 	 */
-	public void cbOnActionPlayers(ActionEvent event) {
-		
-		/*
-		 *  Wenn entweder 2 oder 4 Spieler ausgewählt wurden 
-		 */
-		if((cbNumberOfPlayers.getValue().equals("2"))) {
+	public void rbOnActionPlayer2(ActionEvent event) {
+		if(rbPlayer2.isSelected()) {
+			
 			numberOfPlayers = 2;
 		}
 		
 		/*
-		 *  wenn 4 Spieler ausgewählt wurden dann werden die Nodes für Spieler 3 und 4 sichtbar gemacht
+		 * Die Textfelder und ComboBoxen für den Spieler 1 und Spieler 2 werden aktiviert, außer die ComboBox Farben für Spieler 2 da der Spieler 2 immer gegenüber der Farbe des Spielers 1 sein muss
 		 */
-		else if(cbNumberOfPlayers.getValue().equals("4")) {
+		txtName1.setDisable(false);
+		cbColor1.setDisable(false);
+		cbRival1.setDisable(false);
+		
+		txtName2.setDisable(false);
+		cbRival2.setDisable(false);
+		
+		/*
+		 * Die Auswahl für die Anzahl an Spielern die nicht ausgewählt wurde, wird deaktiviert
+		 */
+		rbPlayer3.setDisable(true);
+		rbPlayer4.setDisable(true);
+		rbPlayer5.setDisable(true);
+		rbPlayer6.setDisable(true);
+		
+		/*
+		 * Da die Vorauswahl der ComboBox Farben des Spieler 1 auf Gelb gesetzt wird, wird die Farbe Rot für den Spieler 2 ausgewählt
+		 */
+		cbColor2.setValue("Rot");
+	}
+	
+	@FXML
+	/*
+	 * Event Listener für den RadioButton, wenn für die Anzahl der Spieler 3 ausgewählt wird.
+	 */
+	public void rbOnActionPlayer3(ActionEvent event) {
+		if(rbPlayer3.isSelected()) {
+			numberOfPlayers = 3;
+			
+			/*
+			 * Hier werden die Farben Blau und Lila zur ComboBox Farben des Spielers 1 hinzugefügt, da hier auf dem 6er Spielfeld gespielt wird.
+			 * Da die Auswahl für Spieler 1 anfangs auf Gelb gesetzt wird und die direkte Nachbarfarbe bei 3 Spieler nicht ausgewählt werden darf, wird die Auswahl Farbe bei Spieler 2 auf Blau und Grün beschränkt
+			 * Die Farbauswahl bei Spieler 3 wird erweitert mit Blau und Lila und die Vorauswahl auf Grün gesetzt
+			 */
+			cbColor1.getItems().add("Blau");
+			cbColor1.getItems().add("Lila");
+			cbColor1.setValue("Gelb");
+			
+			cbColor2.getItems().clear();
+			cbColor2.getItems().add("Blau");
+			cbColor2.getItems().add("Grün");
+			cbColor2.setValue("Blau");
+			
+			cbColor3.getItems().add("Blau");
+			cbColor3.getItems().add("Lila");
+			cbColor3.setValue("Grün");
+			
+			
+			
+			/*
+			 * Das Textfeld für den Namen und die ComboBox für die Gegnerauswahl wird für Spieler 1, Spieler 2 und Spieler 3 aktiviert
+			 */
+			txtName1.setDisable(false);
+			cbColor1.setDisable(false);
+			cbRival1.setDisable(false);
+			
+			txtName2.setDisable(false);
+			cbColor2.setDisable(false);
+			cbRival2.setDisable(false);
+			
+			txtName3.setDisable(false);
+			cbRival3.setDisable(false);
+			
+			/*
+			 * Die Auswahl für die Anzahl an Spielern die nicht ausgewählt wurde, wird deaktiviert
+			 */
+			rbPlayer2.setDisable(true);
+			rbPlayer4.setDisable(true);
+			rbPlayer5.setDisable(true);
+			rbPlayer6.setDisable(true);
+		}
+	}
+	
+	@FXML
+	/*
+	 * Event Listener für den RadioButton, wenn für die Anzahl der Spieler 4 ausgewählt wird.
+	 */
+	public void rbOnActionPlayer4(ActionEvent event) {
+		if(rbPlayer4.isSelected()) {
 			numberOfPlayers = 4;
+			
+			/*
+			 * Das Textfeld für den Namen und die ComboBox für die Gegnerauswahl wird für Spieler 1, Spieler 2, Spieler 3 und Spieler 4 aktiviert
+			 */
+			txtName1.setDisable(false);
+			cbColor1.setDisable(false);
+			cbRival1.setDisable(false);
+			
+			txtName2.setDisable(false);
+			cbColor2.setDisable(false);
+			cbRival2.setDisable(false); 
 			
 			txtName3.setDisable(false);
 			cbColor3.setDisable(false);
@@ -165,15 +240,28 @@ public class LauncherController {
 			txtName4.setDisable(false);
 			cbColor4.setDisable(false);
 			cbRival4.setDisable(false);
-		}	
-		
-		/*
-		 *  wenn eine andere Auswahl an Spielern getroffen wurde also 3, 5 oder 6
-		 */
-		else {
 			
 			/*
-			 *  die Combobox colors mit 6 Farben gefüllt und Gelb als Vorauswahl getroffen damit es nie leer sein kann
+			 * Die Auswahl für die Anzahl an Spielern die nicht ausgewählt wurde, wird deaktiviert
+			 */
+			rbPlayer2.setDisable(true);
+			rbPlayer3.setDisable(true);
+			rbPlayer5.setDisable(true);
+			rbPlayer6.setDisable(true);
+		}
+	}
+	
+	@FXML
+	/*
+	 * Event Listener für den RadioButton, wenn für die Anzahl der Spieler 5 ausgewählt wird.
+	 */
+	public void rbOnActionPlayer5(ActionEvent event) {
+		if(rbPlayer5.isSelected()) {
+			numberOfPlayers = 5;
+			
+			/*
+			 * Hier werden die Farben Blau und Lila zur ComboBox Farben aller Spieler hinzugefügt, da hier auf dem 6er Spielfeld gespielt wird
+			 * Und jeweils eine Vorauswahl der Farben getroffen
 			 */
 			int i = 0,j = 0;
 			while (i < cbColor.size()) {
@@ -183,61 +271,514 @@ public class LauncherController {
 				i++;
 			}
 			
-			numberOfPlayers = 3;
-			
 			/*
-			 *  wenn 3 Spieler ausgewählt wurden dann werden die Nodes für Spieler 3 sichtbar gemacht
+			 * Das Textfeld für den Namen und die ComboBox für die Gegnerauswahl wird für Spieler 1, Spieler 2, Spieler 3, Spieler 4 und Spieler 5 aktiviert
 			 */
+			txtName1.setDisable(false);
+			cbColor1.setDisable(false);
+			cbRival1.setDisable(false);
+			
+			txtName2.setDisable(false);
+			cbColor2.setDisable(false);
+			cbRival2.setDisable(false);
+			
 			txtName3.setDisable(false);
 			cbColor3.setDisable(false);
 			cbRival3.setDisable(false);
 			
+			txtName4.setDisable(false);
+			cbColor4.setDisable(false);
+			cbRival4.setDisable(false);
+			
+			txtName5.setDisable(false);
+			cbColor5.setDisable(false);
+			cbRival5.setDisable(false);
+			
 			/*
-			 *  wenn 5 Spieler ausgewählt wurden dann werden die Nodes für Spieler 4 und 5 sichtbar gemacht
+			 * Die Auswahl für die Anzahl an Spielern die nicht ausgewählt wurde, wird deaktiviert
 			 */
-			if(cbNumberOfPlayers.getValue().equals("5")) {
-				numberOfPlayers = 5;
-				txtName4.setDisable(false);
-				cbColor4.setDisable(false);
-				cbRival4.setDisable(false);
-				
-				txtName5.setDisable(false);
-				cbColor5.setDisable(false);
-				cbRival5.setDisable(false);
+			rbPlayer2.setDisable(true);
+			rbPlayer3.setDisable(true);
+			rbPlayer4.setDisable(true);
+			rbPlayer6.setDisable(true);
+		}
+	}
+	
+	@FXML
+	/*
+	 * Event Listener für den RadioButton, wenn für die Anzahl der Spieler 6 ausgewählt wird.
+	 */
+	public void rbOnActionPlayer6(ActionEvent event) {
+		if(rbPlayer6.isSelected()) {
+			numberOfPlayers = 6;
+			
+			/*
+			 * Hier werden die Farben Blau und Lila zur ComboBox Farben aller Spieler hinzugefügt, da hier auf dem 6er Spielfeld gespielt wird
+			 * Und jeweils eine Vorauswahl der Farben getroffen
+			 */
+			int i = 0,j = 0;
+			while (i < cbColor.size()) {
+				cbColor.get(i).getItems().add("Blau");
+				cbColor.get(i).getItems().add("Lila");
+				cbColor.get(i).setValue("Gelb");
+				i++;
 			}
 			
 			/*
-			 *  wenn 6 Spieler ausgewählt wurden dann werden die Nodes für Spieler 4, 5 und 6 sichtbar gemacht
+			 * Das Textfeld für den Namen und die ComboBox für die Gegnerauswahl wird für alle Spieler aktiviert
 			 */
-			else if(cbNumberOfPlayers.getValue().equals("6")) {
-				numberOfPlayers = 6;
-				txtName4.setDisable(false);
-				cbColor4.setDisable(false);
-				cbRival4.setDisable(false);
+			txtName1.setDisable(false);
+			cbColor1.setDisable(false);
+			cbRival1.setDisable(false);
+			
+			txtName2.setDisable(false);
+			cbColor2.setDisable(false);
+			cbRival2.setDisable(false);
+			
+			txtName3.setDisable(false);
+			cbColor3.setDisable(false);
+			cbRival3.setDisable(false);
+			
+			txtName4.setDisable(false);
+			cbColor4.setDisable(false);
+			cbRival4.setDisable(false);
 				
-				txtName5.setDisable(false);
-				cbColor5.setDisable(false);
-				cbRival5.setDisable(false);
+			txtName5.setDisable(false);
+			cbColor5.setDisable(false);
+			cbRival5.setDisable(false);
+			
+			txtName6.setDisable(false);
+			cbColor6.setDisable(false);
+			cbRival6.setDisable(false);
+			
+			/*
+			 * Die Auswahl für die Anzahl an Spielern die nicht ausgewählt wurde, wird deaktiviert
+			 */
+			rbPlayer2.setDisable(true);
+			rbPlayer3.setDisable(true);
+			rbPlayer4.setDisable(true);
+			rbPlayer5.setDisable(true);
+		}
+	}
+	
+	@FXML
+	/*
+	 *  Event Listener für die ComboBox Farben1.
+	 */
+	public void cbOnActionColor1(ActionEvent event) {
+		/*
+		 * Da man nur Werte die Items der jeweiligen ComboBox sind als Value setzen kann werden hier nochmal alle zur ComboBox der Farben des Spielers 2 hinzugefügt,
+		 * da es ansonsten zu Fehler bei der Farbauswahl von 3 Spielern kommen würde
+		 */
+		cbColor2.getItems().clear();
+		cbColor2.getItems().add("Gelb");
+		cbColor2.getItems().add("Rot");
+		cbColor2.getItems().add("Grün");
+		cbColor2.getItems().add("Schwarz");
+		cbColor2.getItems().add("Blau");
+		cbColor2.getItems().add("Lila");
+		/*
+		 * Wenn die Anzahl der Spieler = 2 ist, wird die Methode setcbColor2Player2() ausgeführt.
+		 */
+		if(rbPlayer2.isSelected()){
+			setcbColor2Player2();
+		}
+		/*
+		 * Wenn die Anzahl der Spieler = 3 ist, wird die Methode setcbColor2Player3() ausgeführt.
+		 */
+		else if(rbPlayer3.isSelected()) {
+			setcbColor2Player3();
+			
+		}
+		
+		
+	}
+	
+	/*
+	 * Wenn die Anzahl der Spieler = 2 ist, dürfen nur die gegenüberliegenden Farben verwendet werden. 
+	 * Es wird zunächst die Auswahl für die erste Farbe überprüft und die Farbe für die zweite Farbe, also den Spieler 2 automatisch ausgewählt.
+	 * Die zweite Farbe kann nicht verändert werden.
+	 */
+	private void setcbColor2Player2() {		
+		if(cbColor1.getValue().equals("Gelb")) {
+			cbColor2.setValue("Rot");
+			cbColor2.setDisable(true);
+		} else if(cbColor1.getValue().equals("Grün")) {
+			cbColor2.setValue("Schwarz");
+			cbColor2.setDisable(true);
+		} else if(cbColor1.getValue().equals("Rot")) {
+			cbColor2.setValue("Gelb");
+			cbColor2.setDisable(true);
+		} else if(cbColor1.getValue().equals("Schwarz")) {
+			cbColor2.setValue("Grün");
+			cbColor2.setDisable(true);
+		}
+		
+	}
+	
+	/*
+	 * Wenn die Anzahl der Spieler = 3 ist, dürfen nur die Farben verwendet werden, die nicht direkte Nachbarn sind. 
+	 * Es wird zunächst die Auswahl für die erste Farbe überprüft und die Farbauswahl für die zweite Farbe neu festgelegt, also die ComboBox der Farbe des Spielers 2 jeweils neue Items gesetzt.
+	 */
+	private void setcbColor2Player3() {
+		if(cbColor1.getValue().equals("Gelb")) {
+			cbColor2.getItems().clear();
+			cbColor2.getItems().add("Blau");
+			cbColor2.getItems().add("Grün");
+			cbColor2.setValue("Blau");
+			cbColor3.setValue("Grün");
 				
-				txtName6.setDisable(false);
-				cbColor6.setDisable(false);
-				cbRival6.setDisable(false);
+		} else if(cbColor1.getValue().equals("Grün")) {
+			cbColor2.getItems().clear();
+			cbColor2.getItems().add("Gelb");
+			cbColor2.getItems().add("Blau");
+			cbColor2.setValue("Gelb");
+			cbColor3.setValue("Blau");
+				
+		} else if(cbColor1.getValue().equals("Blau")) {
+			cbColor2.getItems().clear();
+			cbColor2.getItems().add("Gelb");
+			cbColor2.getItems().add("Grün");
+			cbColor2.setValue("Gelb");
+			cbColor3.setValue("Grün");
+		
+		} else if(cbColor1.getValue().equals("Lila")) {
+			cbColor2.getItems().clear();
+			cbColor2.getItems().add("Rot");
+			cbColor2.getItems().add("Schwarz");
+			cbColor2.setValue("Rot");
+			cbColor3.setValue("Schwarz");
+				
+		} else if(cbColor1.getValue().equals("Rot")) {
+			cbColor2.getItems().clear();
+			cbColor2.getItems().add("Lila");
+			cbColor2.getItems().add("Schwarz");
+			cbColor2.setValue("Lila");
+			cbColor3.setValue("Schwarz");
+				
+		} else if(cbColor1.getValue().equals("Schwarz")) {
+			cbColor2.getItems().clear();
+			cbColor2.getItems().add("Rot");
+			cbColor2.getItems().add("Lila");
+			cbColor2.setValue("Rot");
+			cbColor3.setValue("Lila");
+		}
+	}
+
+	@FXML
+	/*
+	 *  Event Listener für die ComboBox Farben2.
+	 */
+	public void cbOnActionColor2(ActionEvent event) {
+		
+		/*
+		 * Wenn die Anzahl der Spieler = 3 ist, wird die Methode setcbColor3() ausgeführt.
+		 */
+		if(rbPlayer3.isSelected()){
+			setcbColor3();
+		}
+	}
+
+	/*
+	 * Es wird anschließend die Auswahl für die erste und zweite Farbe überprüft und die Farbe für die dritte Farbe, also für den Spieler 3 automatisch ausgewählt.
+	 * Die dritte Farbe kann nicht verändert werden.
+	 */
+	public void setcbColor3() {
+		if(cbColor1.getValue().equals("Gelb")) {
+			if(cbColor2.getValue().equals("Grün")) {
+				cbColor3.setValue("Blau");
+			} else if (cbColor2.getValue().equals("Blau")){
+				cbColor3.setValue("Grün");
+			}	
+		} else if(cbColor1.getValue().equals("Grün")) {
+			if(cbColor2.getValue().equals("Blau")) {
+				cbColor3.setValue("Gelb");
+			} else if(cbColor2.getValue().equals("Gelb")){
+				cbColor3.setValue("Blau");
+			}	
+		} else if(cbColor1.getValue().equals("Blau")) {
+			if(cbColor2.getValue().equals("Grün")) {
+				cbColor3.setValue("Gelb");
+			} else if(cbColor2.getValue().equals("Gelb")){
+				cbColor3.setValue("Grün");
+			}		
+		} else if(cbColor1.getValue().equals("Lila")) {
+			if(cbColor2.getValue().equals("Rot")) {
+				cbColor3.setValue("Schwarz");
+			} else if (cbColor2.getValue().equals("Schwarz")){
+				cbColor3.setValue("Rot");
+			}				
+		} else if(cbColor1.getValue().equals("Rot")) {
+			if(cbColor2.getValue().equals("Lila")) {
+				cbColor3.setValue("Schwarz");
+			} else if (cbColor2.getValue().equals("Schwarz")){
+				cbColor3.setValue("Lila");
+			}	
+				
+		} else if(cbColor1.getValue().equals("Schwarz")) {
+			if(cbColor2.getValue().equals("Rot")) {
+				cbColor3.setValue("Lila");
+			} else if (cbColor2.getValue().equals("Lila")){
+				cbColor3.setValue("Rot");
+			}	
+		}
+	}
+
+	
+	@FXML
+	/*
+	 *  Event Listener für den Button Auswahl überprüfen.
+	 */
+	public void buttonOnActionCheckSelection(ActionEvent event) {
+		/*
+		 * Zunächst muss ein RadioButton für die Anzahl an Spielern ausgewählt sein, damit es keinen Fehler bei der Überprüfung gibt
+		 */
+		if((!rbPlayer2.isSelected()) && (!rbPlayer3.isSelected()) && (!rbPlayer4.isSelected()) && (!rbPlayer5.isSelected()) && (!rbPlayer6.isSelected())) {
+			JOptionPane.showMessageDialog(null, "Bitte wählen Sie eine Anzahl an Spielern aus.","Achtung", JOptionPane.ERROR_MESSAGE);
+		}
+		else {
+			/*
+			 * Wenn die Anzahl der Spieler = 2 ausgewählt wurde
+			 */
+			if(numberOfPlayers == 2) {
+				/*
+				 * Es wird die Methode checkSelection1and2() ausgeführt, wenn diese false zurückggibt wird eine Fehlermeldung gesendet
+				 */
+				if(checkSelection1and2() == true) {
+					btnStartGame.setDisable(false);
+				} else {
+					JOptionPane.showMessageDialog(null, "Bitte Überprüfen Sie Ihre Eingaben.","Achtung", JOptionPane.ERROR_MESSAGE);
+				}
+				
+			/*
+			 * Wenn die Anzahl der Spieler = 3 ausgewählt wurde
+			 */
+			}else if(numberOfPlayers == 3) {
+				/*
+				 * Es werden die Methoden checkSelection1and2() und checkSelection3() ausgeführt, wenn diese false zurückggeben wird eine Fehlermeldung gesendet.
+				 */
+				if((checkSelection1and2() == true) && (checkSelection3() == true)) {
+						btnStartGame.setDisable(false);
+				} else {
+					JOptionPane.showMessageDialog(null, "Bitte Überprüfen Sie Ihre Eingaben.","Achtung", JOptionPane.ERROR_MESSAGE);
+				}
+			
+			/*
+			 * Wenn die Anzahl der Spieler = 4 ausgewählt wurde
+			 */
+			} else if (numberOfPlayers == 4) {
+				/*
+				 * Es werden die Methoden checkSelection1and2(), checkSelection3() und checkSelection4() ausgeführt, wenn diese false zurückggeben wird eine Fehlermeldung gesendet.
+				 */
+				if((checkSelection1and2() == true) && (checkSelection3() == true) && (checkSelection4() == true)) {
+					btnStartGame.setDisable(false);
+				} else {
+					JOptionPane.showMessageDialog(null, "Bitte Überprüfen Sie Ihre Eingaben.","Achtung", JOptionPane.ERROR_MESSAGE);
+				}
+			
+			/*
+			 * Wenn die Anzahl der Spieler = 5 ausgewählt wurde
+			 */
+			} else if (numberOfPlayers == 5) {
+				/*
+				 * Es werden die Methoden checkSelection1and2(), checkSelection3(), checkSelection4() und checkSelection5() ausgeführt, wenn diese false zurückggeben wird eine Fehlermeldung gesendet.
+				 */
+				if((checkSelection1and2() == true) && (checkSelection3() == true) && (checkSelection4() == true) && (checkSelection5()) == true) {
+					btnStartGame.setDisable(false);
+				} else {
+					JOptionPane.showMessageDialog(null, "Bitte Überprüfen Sie Ihre Eingaben.","Achtung", JOptionPane.ERROR_MESSAGE);
+				}
+			
+			/*
+			 * Wenn die Anzahl der Spieler = 6 ausgewählt wurde
+			 */
+			} else if (numberOfPlayers == 6) {
+				/*
+				 * Es werden die Methoden checkSelection1and2(), checkSelection3(), checkSelection4(), checkSelection5() und checkSelection6() ausgeführt, wenn diese false zurückggeben wird eine Fehlermeldung gesendet.
+				 */
+				if((checkSelection1and2() == true) && (checkSelection3() == true) && (checkSelection4() == true) && (checkSelection5() == true) && (checkSelection6() == true)) {
+					btnStartGame.setDisable(false);
+				} else {
+					JOptionPane.showMessageDialog(null, "Bitte Überprüfen Sie Ihre Eingaben.","Achtung", JOptionPane.ERROR_MESSAGE);
+				}
 			}
 		}
-		cbNumberOfPlayers.setDisable(true);
+		
+		//nur für Testzwecke
+		System.out.println(playerName);
+		System.out.println(color);
+		System.out.println(rival);
+		
+	}
+	
+	
+	/*
+	 * Die Eingaben beim Spieler 1 und Spieler 2 werden auf Vollständigkeit und Richtigkeit überprüft.
+	 * @return Es wird false zurückgegeben, wenn nicht alles richtig und vollständig ist, also die TextFelder nicht oder falsch ausgefüllt wurden, hierzu zählt auch die Eingabe von Sonderzeichen oder eine zu Große oder zu Kleine Eingabe erfolgt ist oder mehrere Spieler die gleiche Farbe gewählt haben
+	 * @return Es wird true zurückgegeben, wenn alles richtig und vollständig ist und die Eingaben werden den ArrayList hinzugefügt
+	 */
+	public boolean checkSelection1and2 () {
+		
+		if((txtName1.getText().isEmpty()) || (txtName2.getText().isEmpty()) || (txtName2.getText().equals(txtName1.getText())) || (!txtName1.getText().matches("\\w+")) || (!txtName2.getText().matches("\\w+")) || (txtName1.getText().length() > 40) || (txtName1.getText().length() <= 1) || (txtName2.getText().length() > 40) || (txtName2.getText().length() <= 1)){
+			playerName.clear();
+			color.clear();
+			rival.clear();
+			return false;
+		}	
+		if((cbColor1.getValue().isEmpty()) || (cbColor2.getValue().isEmpty()) || (cbColor2.getValue().equals(cbColor1.getValue()))) {
+			playerName.clear();
+			color.clear();
+			rival.clear();
+			return false;
+		}
+		
+		else {	
+			playerName.add(txtName1.getText());
+			color.add(cbColor1.getValue());
+			rival.add(cbRival1.getValue());	
+		
+			playerName.add(txtName2.getText());
+			color.add(cbColor2.getValue());
+			rival.add(cbRival2.getValue());	
+			return true;	
+		}
+	}
+	
+	/*
+	 * Die Eingaben beim Spieler 3 werden auf Vollständigkeit und Richtigkeit überprüft.
+	 * @return Es wird false zurückgegeben wenn nicht alles richtig und vollständig ist, also die TextFelder nicht oder falsch ausgefüllt wurden, hierzu zählt auch die Eingabe von Sonderzeichen oder eine zu Große oder zu Kleine Eingabe erfolgt ist oder mehrere Spieler die gleiche Farbe gewählt haben
+	 * @return Es wird true zurückgegeben wenn alles richtig und vollständig ist und die Eingaben werden den ArrayList hinzugefügt
+	 */
+	public boolean checkSelection3 () {
+		
+		if((playerName.contains(txtName3.getText())) || (txtName3.getText().isEmpty()) || (!txtName3.getText().matches("\\w+")) || (txtName3.getText().length() > 40) || (txtName3.getText().length() <= 1)){
+			playerName.clear();
+			color.clear();
+			rival.clear();
+			return false;
+		}	
+		// oder die Farbe3 bereits vergeben ist gibt es einen Fehler und die bisherigen Arraylist werden geleert
+		if((cbColor3.getValue().isEmpty()) || (cbColor3.getValue().equals(cbColor1.getValue())) || (cbColor3.getValue().equals(cbColor2.getValue()))){
+			playerName.clear();
+			color.clear();
+			rival.clear();
+			return false;
+		}
+		else { 
+			playerName.add(txtName3.getText());
+			color.add(cbColor3.getValue());
+			rival.add(cbRival3.getValue());	
+			
+			return true;
+		} 	
+	}
+	
+	/*
+	 * Die Eingaben beim Spieler 4 werden auf Vollständigkeit und Richtigkeit überprüft.
+	 * @return Es wird false zurückgegeben wenn nicht alles richtig und vollständig ist, also die TextFelder nicht oder falsch ausgefüllt wurden, hierzu zählt auch die Eingabe von Sonderzeichen oder eine zu Große oder zu Kleine Eingabe erfolgt ist oder mehrere Spieler die gleiche Farbe gewählt haben
+	 * @return Es wird true zurückgegeben wenn alles richtig und vollständig ist und die Eingaben werden den ArrayList hinzugefügt
+	 */
+	public boolean checkSelection4 () {
+		
+		if((playerName.contains(txtName4.getText())) || (txtName4.getText().isEmpty()) || (!txtName4.getText().matches("\\w+")) || (txtName4.getText().length() > 40) || (txtName4.getText().length() <= 1)) {
+			playerName.clear();
+			color.clear();
+			rival.clear();
+			return false;
+		}	
+		
+		if((cbColor4.getValue().isEmpty()) || (cbColor4.getValue().equals(cbColor1.getValue())) || (cbColor4.getValue().equals(cbColor2.getValue())) || (cbColor4.getValue().equals(cbColor3.getValue()))){
+			playerName.clear();
+			color.clear();
+			rival.clear();
+			return false;			
+		} 
+		
+		else { 
+			playerName.add(txtName4.getText());
+			color.add(cbColor4.getValue());	
+			rival.add(cbRival4.getValue());
+			
+			return true;
+		}	
+	}
+		
+	/*
+	 * Die Eingaben beim Spieler 5 werden auf Vollständigkeit und Richtigkeit überprüft.
+	 * @return Es wird false zurückgegeben wenn nicht alles richtig und vollständig ist, also die TextFelder nicht oder falsch ausgefüllt wurden, hierzu zählt auch die Eingabe von Sonderzeichen oder eine zu Große oder zu Kleine Eingabe erfolgt ist oder mehrere Spieler die gleiche Farbe gewählt haben
+	 * @return Es wird true zurückgegeben wenn alles richtig und vollständig ist und die Eingaben werden den ArrayList hinzugefügt
+	 */
+	public boolean checkSelection5 () {
+		
+		if((playerName.contains(txtName5.getText())) || (txtName5.getText().isEmpty()) || (!txtName5.getText().matches("\\w+")) || (txtName5.getText().length() > 40) || (txtName5.getText().length() <= 1)) {
+			playerName.clear();
+			color.clear();
+			rival.clear();
+			return false;
+		}	
+		
+		if((cbColor5.getValue().isEmpty()) || (cbColor5.getValue().equals(cbColor1.getValue())) || (cbColor5.getValue().equals(cbColor2.getValue())) || (cbColor5.getValue().equals(cbColor3.getValue())) || (cbColor5.getValue().equals(cbColor4.getValue()))){
+			playerName.clear();
+			color.clear();
+			rival.clear();
+			return false;
+		}	
+		
+		else { 
+			playerName.add(txtName5.getText());
+			color.add(cbColor5.getValue());	
+			rival.add(cbRival5.getValue());
+			
+			return true;
+		}
+	}
+		
+	/*
+	 * Die Eingaben beim Spieler 6 werden auf Vollständigkeit und Richtigkeit überprüft.
+	 * @return Es wird false zurückgegeben wenn nicht alles richtig und vollständig ist, also die TextFelder nicht oder falsch ausgefüllt wurden, hierzu zählt auch die Eingabe von Sonderzeichen oder eine zu Große oder zu Kleine Eingabe erfolgt ist oder mehrere Spieler die gleiche Farbe gewählt haben
+	 * @return Es wird true zurückgegeben wenn alles richtig und vollständig ist und die Eingaben werden den ArrayList hinzugefügt
+	 */
+	public boolean checkSelection6 () {
+		if((playerName.contains(txtName6.getText())) || (txtName6.getText().isEmpty()) || (!txtName6.getText().matches("\\w+")) || (txtName6.getText().length() > 40) || (txtName6.getText().length() <= 1)) {
+			playerName.clear();
+			color.clear();
+			rival.clear();
+			return false;
+		} 
+		
+		if((cbColor6.getValue().isEmpty()) || (cbColor6.getValue().equals(cbColor1.getValue())) || (cbColor6.getValue().equals(cbColor2.getValue())) || (cbColor6.getValue().equals(cbColor3.getValue())) || (cbColor6.getValue().equals(cbColor4.getValue())) || (cbColor6.getValue().equals(cbColor5.getValue()))){
+			playerName.clear();
+			color.clear();
+			rival.clear();
+			return false;
+		}
+		
+		else { 
+			playerName.add(txtName6.getText());
+			color.add(cbColor6.getValue());
+			rival.add(cbRival6.getValue());	
+			
+			return true;
+			
+		} 
 	}
 	
 	@FXML		
 	/*
 	 *  Event Listener für den Start Button.
-	 *  Dieser Startet das Spiel und wählt das jeweilige Spielbrett aus
 	 */
 	public void buttonOnActionStart(ActionEvent event) {
+		/*
+		 * Schließen des Launcher Fensters
+		 */
+		Stage currentStage = (Stage)btnStartGame.getScene().getWindow();
+		currentStage.close();
 		
 		/*
-		 *  Bei 3, 5 oder 6 Spielern wird das 6er Brett aufgerufen
+		 * Bei 3, 5 oder 6 Spielern wird das 6er Brett aufgerufen
 		 */
-		if((numberOfPlayers == 3) ^ (numberOfPlayers == 5) ^ (numberOfPlayers == 6)) {
+		if((numberOfPlayers == 3) || (numberOfPlayers == 5) || (numberOfPlayers == 6)) {
+			
 			
 			try {
 				FXMLLoader fxmlloader = new FXMLLoader(getClass().getResource("/sixplayersgame/GameBoardSixPlayers.fxml"));
@@ -247,17 +788,18 @@ public class LauncherController {
 				Stage secondaryStage = new Stage();
 				secondaryStage.setTitle("Game Board");
 				secondaryStage.setScene(new Scene(root, 600, 450)); 
+				secondaryStage.setFullScreen(true);
 				secondaryStage.show();
 				
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		} 
-		else {
 			
+		} else {
+						
 			/*
-			 *  Ansonsten wird immer das 4er Brett aufgerufen
-			 */
+			 * Bei 2 oder 4 Spielern wird das 4er Brett aufgerufen
+			 */			
 			try {
 				FXMLLoader fxmlloader = new FXMLLoader(getClass().getResource("/fourplayersgame/GameBoardFourPlayers.fxml"));
 				Parent root = fxmlloader.load();
@@ -266,6 +808,7 @@ public class LauncherController {
 				Stage secondaryStage = new Stage();
 				secondaryStage.setTitle("Game Board");
 				secondaryStage.setScene(new Scene(root, 600, 450)); 
+				secondaryStage.setFullScreen(true);
 				secondaryStage.show();
 				
 			} catch (IOException e) {
@@ -280,194 +823,7 @@ public class LauncherController {
 	 *  Dieser schließt das Programm
 	 */
 	public void buttonOnActionExit(ActionEvent event) {
-
+		
 		System.exit(0);
 	}
-	
-	@FXML
-	/*
-	 *  Event Listener für den Button spiel Starten.
-	 *  Hier wird die Methode checkSelection aufgerufen.
-	 */
-	public void buttonOnActionCheckSelection(ActionEvent event) {
-		checkSelection();
-	}
-	
-	/*
-	 *  Eingaben auf Vollständigkeit und Richtigkeit überprüft
-	 */
-	public void checkSelection () {
-		
-		/*
-		 *  Wenn das TextFeld zum Name 1 leer ist dann gibt es eine Fehlermeldung
-		 */
-		if(txtName1.getText().isEmpty()){
-			JOptionPane.showMessageDialog(null, "Bitte Überprüfen Sie Ihre Eingaben.","Achtung", JOptionPane.ERROR_MESSAGE);
-		}
-		
-		/*
-		 *  ansonsten wird der Name, Farbe und Gegner in die ArrayList übernommen
-		 */
-		else {	
-				playerName.add(txtName1.getText());
-				color.add(cbColor1.getValue());
-				rival.add(cbRival1.getValue());	
-		
-				/*
-				 *  wenn der Name2 gleich ist wie ein Name in der ArrayList der Namen oder leer ist 
-				 */
-				if((playerName.contains(txtName2.getText())) || (txtName2.getText().isEmpty())){
-					
-					/*
-					 *  oder die Farbe2 gleich ist wie Farbe1 dann gibt es einen Fehler und die bisherigen ArrayList werden geleert
-					 */
-					if(cbColor2.getValue().equals(cbColor1.getValue())) {
-						playerName.clear();
-						color.clear();
-						rival.clear();
-						JOptionPane.showMessageDialog(null, "Bitte überprüfen Sie Ihre Eingaben","Achtung", JOptionPane.ERROR_MESSAGE);
-					}
-				} else { 
-					
-					/*
-					 *  ansonsten wird der Name2, die Farbe 2 und der Gegner zur jeweiligen ArrayList hinzugefügt
-					 */
-					playerName.add(txtName2.getText());
-					color.add(cbColor2.getValue());
-					rival.add(cbRival2.getValue());	
-					if(cbNumberOfPlayers.getValue().equals("2")) {
-						btnStartGame.setDisable(false);
-					}
-					
-				}
-				
-			if(numberOfPlayers == 3) {
-				
-				/*
-				 *  wenn der Name3 gleich ist wie ein Name in der ArrayList oder leer ist 
-				 */
-				if((playerName.contains(txtName3.getText())) || (txtName3.getText().isEmpty())){
-					
-					/*
-					 *  oder die Farbe3 bereits vergeben ist gibt es einen Fehler und die bisherigen Arraylist werden geleert
-					 */
-					if((cbColor3.getValue().equals(cbColor1.getValue())) || (cbColor3.getValue().equals(cbColor2.getValue()))){
-					playerName.clear();
-					color.clear();
-					rival.clear();
-					JOptionPane.showMessageDialog(null,  "Bitte überprüfen Sie Ihre Eingaben","Achtung", JOptionPane.ERROR_MESSAGE);
-					}
-				}
-				else { 
-					
-					/*
-					 *  ansonsten wird der Name3, die Farbe3 und der Gegner zur jeweiligen ArrayList hinzugefügt
-					 */
-					playerName.add(txtName3.getText());
-					color.add(cbColor3.getValue());
-					rival.add(cbRival3.getValue());	
-					btnStartGame.setDisable(false);
-				} 		
-			} 
-			else if(numberOfPlayers == 4) {
-				
-				/*
-				 *  wenn der Name4 oder Name3 gleich ist wie ein Name in der ArrayList oder leer ist 
-				 */
-				if((playerName.contains(txtName3.getText()) || (playerName.contains(txtName4.getText()))) || (txtName3.getText().isEmpty()) || (txtName4.getText().isEmpty())) {
-					/*
-					 *  oder die Farbe3 oder Farbe4 bereits vergeben ist gibt es einen Fehler und die bisherigen Arraylist werden geleert
-					 */
-					if((cbColor3.getValue().equals(cbColor1.getValue())) || (cbColor3.getValue().equals(cbColor2.getValue())) || (cbColor4.getValue().equals(cbColor1.getValue())) || 
-					(cbColor4.getValue().equals(cbColor2.getValue())) || (cbColor4.getValue().equals(cbColor3.getValue()))){
-						playerName.clear();
-						color.clear();
-						rival.clear();
-						JOptionPane.showMessageDialog(null,  "Bitte überprüfen Sie Ihre Eingaben.","Achtung", JOptionPane.ERROR_MESSAGE);
-					}
-									
-				} else {
-					
-					/*
-					 *  ansonsten wird der Name3, Name4, die Farbe3, Farbe4 und der Gegner3, Gegner4 zur jeweiligen ArrayList hinzugefügt
-					 */
-					playerName.add(txtName3.getText());	
-					playerName.add(txtName4.getText());
-					color.add(cbColor3.getValue());	
-					color.add(cbColor4.getValue());	
-					rival.add(cbRival3.getValue());	
-					rival.add(cbRival4.getValue());	
-					btnStartGame.setDisable(false);
-				}
-			} else if(numberOfPlayers == 5) {
-				
-				/*
-				 *  wenn der Name3, Name4 oder Name5 gleich ist wie ein Name in der ArrayList oder leer ist 
-				 */
-				if((playerName.contains(txtName3.getText())) || (playerName.contains(txtName4.getText())) || (playerName.contains(txtName5.getText())) || (txtName3.getText().isEmpty()) || (txtName4.getText().isEmpty()) || (txtName5.getText().isEmpty())) {
-					/*
-					 *  oder die Farbe3, Farbe4 oder Farbe5 schon vergeben ist gibt es einen Fehler und die bisherigen Arraylist werden geleert
-					 */
-					if((cbColor3.getValue().equals(cbColor1.getValue())) || (cbColor3.getValue().equals(cbColor2.getValue())) || (cbColor4.getValue().equals(cbColor1.getValue())) || (cbColor4.getValue().equals(cbColor2.getValue())) || 
-					(cbColor4.getValue().equals(cbColor3.getValue())) || (cbColor5.getValue().equals(cbColor1.getValue())) || (cbColor5.getValue().equals(cbColor2.getValue())) || (cbColor5.getValue().equals(cbColor3.getValue())) || (cbColor5.getValue().equals(cbColor4.getValue()))){
-							playerName.clear();
-							color.clear();
-							rival.clear();
-							JOptionPane.showMessageDialog(null,  "Bitte überprüfen Sie Ihre Eingaben.","Achtung", JOptionPane.ERROR_MESSAGE);
-					}
-										
-				} else { 
-					/*
-					 *  ansonsten wird der Name3, Name4, Name5, die Farbe3, Farbe4, Farbe5 und der Gegner3, Gegner4, Gegner5 zur jeweiligen ArrayList hinzugefügt
-					 */
-					playerName.add(txtName3.getText());	
-					playerName.add(txtName4.getText());
-					playerName.add(txtName5.getText());
-					color.add(cbColor3.getValue());	
-					color.add(cbColor4.getValue());		
-					color.add(cbColor5.getValue());	
-					rival.add(cbRival3.getValue());	
-					rival.add(cbRival4.getValue());	
-					rival.add(cbRival5.getValue());
-					btnStartGame.setDisable(false);
-				} 				
-				/*
-				 *  wenn der Name3, Name4, Name5 oder Name6 gleich ist wie ein Name in der ArrayList oder leer ist 
-				 */
-			} else if(numberOfPlayers == 6) {
-				if((playerName.contains(txtName3.getText())) || (playerName.contains(txtName4.getText())) || (playerName.contains(txtName5.getText()))|| (playerName.contains(txtName6.getText())  
-				|| (txtName3.getText().isEmpty()) || (txtName4.getText().isEmpty()) || (txtName5.getText().isEmpty()) || (txtName6.getText().isEmpty()))) {
-				/*
-				 *  oder die Farbe3, Farbe4, Farbe5 oder Farbe6 schon vergeben ist gibt es einen Fehler und die bisherigen Arraylist werden geleert
-				 */
-				if((cbColor3.getValue().equals(cbColor1.getValue())) || (cbColor3.getValue().equals(cbColor2.getValue())) || (cbColor4.getValue().equals(cbColor1.getValue())) || (cbColor4.getValue().equals(cbColor2.getValue())) || (cbColor4.getValue().equals(cbColor3.getValue())) || 
-				(cbColor5.getValue().equals(cbColor1.getValue())) || (cbColor5.getValue().equals(cbColor2.getValue())) || (cbColor5.getValue().equals(cbColor3.getValue())) || (cbColor5.getValue().equals(cbColor4.getValue())) || 
-				(cbColor6.getValue().equals(cbColor1.getValue())) || (cbColor6.getValue().equals(cbColor2.getValue())) || (cbColor6.getValue().equals(cbColor3.getValue())) || (cbColor6.getValue().equals(cbColor4.getValue())) || (cbColor6.getValue().equals(cbColor5.getValue()))){
-					playerName.clear();
-					color.clear();
-					rival.clear();
-					JOptionPane.showMessageDialog(null,  "Bitte überprüfen Sie Ihre Eingaben.","Achtung", JOptionPane.ERROR_MESSAGE);
-					
-				}
-				} else {
-					/*
-					 *  ansonsten wird der Name3, Name4, Name5, Name6, die Farbe3, Farbe4, Farbe5, Farbe6 und der Gegner3, Gegner4, Gegner5, Gegner6 zur jeweiligen ArrayList hinzugefügt
-					 */
-					playerName.add(txtName3.getText());	
-					playerName.add(txtName4.getText());
-					playerName.add(txtName5.getText());
-					playerName.add(txtName6.getText());
-					color.add(cbColor3.getValue());	
-					color.add(cbColor4.getValue());		
-					color.add(cbColor5.getValue());	
-					color.add(cbColor6.getValue());
-					rival.add(cbRival3.getValue());	
-					rival.add(cbRival4.getValue());	
-					rival.add(cbRival5.getValue());	
-					rival.add(cbRival6.getValue());	
-					btnStartGame.setDisable(false);
-				} 
-		}	
-	}
-}
 }
