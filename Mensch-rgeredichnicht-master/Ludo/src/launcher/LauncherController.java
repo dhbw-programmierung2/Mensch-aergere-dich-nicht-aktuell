@@ -71,7 +71,8 @@ public class LauncherController {
 	/*
 	 * Variable enthält die Anzahl der Spieler
 	 */
-	private int numberOfPlayers;
+	public static int numberOfPlayers;
+
 	
 	/*
 	 * ArrayLists die die Farbe und Eigenschaften der Spieler enthält, diese sind zum leichteren Befüllen der ComboBoxen.
