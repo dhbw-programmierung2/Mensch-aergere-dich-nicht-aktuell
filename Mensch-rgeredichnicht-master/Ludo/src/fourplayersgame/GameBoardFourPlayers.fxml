@@ -4,7 +4,6 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -13,7 +12,7 @@
 
 <SplitPane fx:id="splitPane" dividerPositions="0.6978653530377669" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="611.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fourplayersgame.GameBoardFourPlayersController">
   <items>
-      <GridPane fx:id="gridPaneLeft" style="-fx-background-color: Yellow;">
+      <GridPane fx:id="gridPaneLeft" style="-fx-background-color: rgb(95,95,95);">
         <columnConstraints>
             <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
             <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
@@ -403,7 +402,7 @@
             </Circle>
          </children>
       </GridPane>
-      <GridPane fx:id="gridPaneRigth">
+      <GridPane fx:id="gridPaneRigth" style="-fx-background-color: rgb(135,135,135);">
         <columnConstraints>
           <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
           <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
@@ -426,9 +425,6 @@
                <GridPane.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </GridPane.margin>
-               <image>
-                  <Image url="@../pictures/Dice1.png" />
-               </image>
             </ImageView>
             <Button fx:id="btnExitGame" mnemonicParsing="false" onAction="#buttonExitGameOnAction" prefHeight="25.0" prefWidth="124.0" text="Spiel Beenden" GridPane.columnSpan="2" GridPane.hgrow="ALWAYS" GridPane.rowIndex="5" GridPane.vgrow="ALWAYS">
                <GridPane.margin>
